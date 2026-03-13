@@ -6,6 +6,15 @@
 
 包含独立的管理端和用户端应用，并共享底层的 UI 组件库、数据库调用和鉴权逻辑。采用 Next.js App Router 结合 Supabase RLS（行级安全），并在 Monorepo 中整合了 WebSocket 实时通信与 AI 对话功能。
 
+## 在线预览
+
+- **用户端访问**: [https://turbo-support-platform-user.vercel.app/](https://turbo-support-platform-user.vercel.app/)
+  - *用户端账号自行注册*
+
+- **管理后台访问**: [https://turbo-support-platform-admin.vercel.app](https://turbo-support-platform-admin.vercel.app)
+  - **admin 用户名**: superadmin@mx
+  - **admin 密码**: 123456
+
 ## 项目结构
 
 系统采用 Turborepo 划分多块独立的 App 和复用的 Package，在架构上实现物理隔离：
