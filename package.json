@@ -1,0 +1,22 @@
+{
+  "name": "turbo-support-platform",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19.2.14",
+    "prettier": "^3.2.5",
+    "turbo": "^1.13.2",
+    "typescript": "^5.4.5"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "engines": {
+    "node": ">=18"
+  }
+}

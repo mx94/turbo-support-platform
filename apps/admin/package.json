@@ -1,0 +1,43 @@
+{
+  "name": "@repo/admin",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "@repo/api-client": "workspace:*",
+    "@repo/auth": "workspace:*",
+    "@repo/database": "workspace:*",
+    "@repo/support": "workspace:*",
+    "@repo/ui": "workspace:*",
+    "jsdom": "^28.1.0",
+    "lucide-react": "^0.378.0",
+    "next": "14.2.4",
+    "react": "^18",
+    "react-dom": "^18",
+    "stream-chat": "^9.25.0",
+    "stream-chat-react": "^13.14.2",
+    "turndown": "^7.2.2"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/jsdom": "^28.0.0",
+    "@types/mozilla-readability": "^0.2.1",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@types/turndown": "^5.0.6",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.4",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
