@@ -1,6 +1,7 @@
 # Turbo Support Platform
 
 [![Next.js](https://img.shields.io/badge/Next.js-black?logo=next.js&logoColor=white)](https://nextjs.org/) [![Turborepo](https://img.shields.io/badge/Turborepo-EF4444?logo=turborepo&logoColor=white)](https://turbo.build/repo) [![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/) [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?logo=shadcnui&logoColor=white)](https://ui.shadcn.com/) [![Stream](https://img.shields.io/badge/Stream-005FFF?logo=stream&logoColor=white)](https://getstream.io/)
+
 基于 Turborepo、Next.js 和 Supabase 构建的双端全栈客服与工单系统。
 
 包含独立的管理端和用户端应用，并共享底层的 UI 组件库、数据库调用和鉴权逻辑。采用 Next.js App Router 结合 Supabase RLS（行级安全），并在 Monorepo 中整合了 WebSocket 实时通信与 AI 对话功能。
