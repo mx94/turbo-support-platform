@@ -152,3 +152,34 @@ export async function deleteArticle(id: string) {
     return { success: false, message: error.message };
   }
 }
+
+export async function createArticle(data: {
+  title: string;
+  content: string;
+  category: string;
+  is_published: boolean;
+  adminUserId: string;
+}) {
+  try {
+    const supabaseAdmin = createAdminClient();
+    const { error } = await supabaseAdmin.from("knowledge_base").insert({
+      title: data.title,
+      content: data.content,
+      category: data.category || "General",
+      is_published: data.is_published,
+      author_id: data.adminUserId,
+    });
+    
+    if (error) {
+      console.error("Supabase Insert Error:", error);
+      throw new Error("Failed to insert article into database");
+    }
+
+    revalidatePath("/knowledge");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error creating article:", error);
+    return { success: false, message: error.message || "创建失败" };
+  }
+}
+
