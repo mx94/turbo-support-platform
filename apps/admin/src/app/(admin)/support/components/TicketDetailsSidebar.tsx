@@ -72,7 +72,6 @@ export function TicketDetailsSidebar() {
         const result = await fetchTicketAndUserDetails(validTicketId, validUserId);
         if (isMounted) {
           setData(result);
-          // @ts-ignore - Supabase type does not include internal_notes until generated
           setNotes(result.currentTicket?.internal_notes || "");
         }
       } catch (err) {
