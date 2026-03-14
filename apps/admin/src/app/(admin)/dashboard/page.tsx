@@ -37,7 +37,7 @@ export default async function AdminDashboardPage(): Promise<ReactElement> {
   const { count: articleCount } = await supabase.from("knowledge_base").select("*", { count: "exact", head: true }).eq("is_published", true);
 
   const { data: recentTickets } = await supabase
-    .from("tickets").select("*, profiles!tickets_user_id_fkey(full_name, email)")
+    .from("tickets").select("*, profiles(full_name, email)")
     .order("created_at", { ascending: false }).limit(5);
 
   const { data: recentActivity } = await supabase
@@ -119,11 +119,11 @@ export default async function AdminDashboardPage(): Promise<ReactElement> {
               );
             })
           ) : (
-            <div className="empty-state py-10">
+            <div className="empty-state py-10 flex flex-col items-center justify-center">
               <div className="empty-state-icon">
                 <FileText className="w-5 h-5 text-muted-foreground/50" />
               </div>
-              <p className="empty-state-title text-sm">暂无工单</p>
+              <p className="empty-state-title text-sm mt-2 text-muted-foreground">暂无工单</p>
             </div>
           )}
         </div>
@@ -150,11 +150,11 @@ export default async function AdminDashboardPage(): Promise<ReactElement> {
               </div>
             ))
           ) : (
-            <div className="empty-state py-10">
+            <div className="empty-state py-10 flex flex-col items-center justify-center">
               <div className="empty-state-icon">
                 <TrendingUp className="w-5 h-5 text-muted-foreground/50" />
               </div>
-              <p className="empty-state-title text-sm">暂无活动</p>
+              <p className="empty-state-title text-sm mt-2 text-muted-foreground">暂无活动</p>
             </div>
           )}
         </div>
