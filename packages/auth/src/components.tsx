@@ -208,14 +208,41 @@ const submitBtnClass =
 export const AdminLoginForm = ({
   redirectTo = "/dashboard",
 }: AdminLoginFormProps) => {
-  const { signInWithPassword, isLoading, error } = useAuth();
+  const { signInWithPassword, isLoading, error: authError } = useAuth();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [localError, setLocalError] = React.useState<string | null>(null);
+  
+  const displayError = localError || authError;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLocalError(null);
+    
     const success = await signInWithPassword(email, password);
     if (success) {
+      // 登录成功后，验证用户角色
+      const { createBrowserSupabaseClient } = await import("@repo/database");
+      const supabase = createBrowserSupabaseClient();
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setLocalError("获取用户信息失败");
+        return;
+      }
+      
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single() as { data: { role?: string } | null };
+        
+      if (profile?.role !== "admin") {
+        await supabase.auth.signOut();
+        setLocalError("仅允许 admin 用户登录，请联系管理员");
+        return;
+      }
+      
       window.location.href = redirectTo;
     }
   };
@@ -281,8 +308,8 @@ export const AdminLoginForm = ({
           </button>
         </form>
 
-        {error ? (
-          <div className="mt-4 text-sm font-medium text-destructive text-center">{error}</div>
+        {displayError ? (
+          <div className="mt-4 text-sm font-medium text-destructive text-center">{displayError}</div>
         ) : null}
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
