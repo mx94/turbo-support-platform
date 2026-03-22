@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./chat-overrides.css";
+
+/* ─── Google Fonts: Poppins (headings) + Inter (body) ─── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    /* ── 语义色彩系统（AI SaaS 客服平台） ── */
+    --background: 220 20% 97%;
+    --foreground: 224 71% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+
+    /* 暗调主色 - 用于主要按钮/导航高亮 */
+    --primary: 250 60% 58%;
+    --primary-foreground: 0 0% 100%;
+    /* AI 紫色品牌色 - 用于渐变、装饰 */
+    --secondary: 262 83% 58%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 14% 95%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 220 14% 95%;
+    --accent-foreground: 224 71% 4%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 250 60% 58%;
+    --radius: 0.75rem;
+
+    /* ── 扩展色彩 ── */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
+    --card: 224 71% 7%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71% 7%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 250 60% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 262 83% 66%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 218 11% 65%;
+    --accent: 223 47% 11%;
+    --accent-foreground: 210 20% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 223 47% 15%;
+    --input: 223 47% 15%;
+    --ring: 250 60% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* ─── 自定义组件类（放在 @layer components 确保跨 app 稳定生效） ─── */
+@layer components {
+  /* 玻璃拟态卡片 */
+  .glass-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    border-radius: 1rem;
+  }
+
+  .glass-card-subtle {
+    background: hsl(var(--card) / 0.7);
+    border: 1px solid hsl(var(--border) / 0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+  }
+
+  .dark .glass-card {
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 品牌渐变 */
+  .gradient-brand {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+  }
+  .gradient-brand-subtle {
+    background: linear-gradient(135deg, hsl(var(--primary) / 0.08), hsl(var(--secondary) / 0.06));
+  }
+  .text-gradient-brand {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+  }
+
+  /* 状态色彩 */
+  .status-open {
+    @apply text-amber-600 bg-amber-50 border-amber-200;
+  }
+  .status-in-progress {
+    @apply text-blue-600 bg-blue-50 border-blue-200;
+  }
+  .status-resolved {
+    @apply text-emerald-600 bg-emerald-50 border-emerald-200;
+  }
+  .status-closed {
+    @apply text-slate-500 bg-slate-50 border-slate-200;
+  }
+
+  .priority-low { @apply text-slate-600 bg-slate-50; }
+  .priority-medium { @apply text-amber-600 bg-amber-50; }
+  .priority-high { @apply text-orange-600 bg-orange-50; }
+  .priority-urgent { @apply text-red-600 bg-red-50; }
+
+  /* 页面头部统一样式 */
+  .page-header {
+    @apply space-y-1.5;
+  }
+  .page-title {
+    @apply text-2xl font-bold tracking-tight text-foreground;
+    font-family: 'Poppins', sans-serif;
+  }
+  .page-subtitle {
+    @apply text-sm text-muted-foreground;
+  }
+  .page-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
+    background-color: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+    border: 1px solid hsl(var(--primary) / 0.2);
+  }
+
+  /* 统计卡片 */
+  .stat-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    @apply rounded-2xl p-5 transition-all duration-200 hover:shadow-md cursor-default;
+  }
+  .stat-card-label {
+    @apply text-xs font-medium text-muted-foreground flex items-center gap-1.5;
+  }
+  .stat-card-value {
+    @apply text-2xl font-bold text-foreground mt-1;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  /* 空状态 */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-16 text-center;
+  }
+  .empty-state-icon {
+    @apply w-14 h-14 rounded-2xl flex items-center justify-center mb-4;
+    background: hsl(var(--muted) / 0.6);
+  }
+  .empty-state-title {
+    @apply text-base font-semibold text-foreground mb-1;
+  }
+  .empty-state-desc {
+    @apply text-sm text-muted-foreground max-w-sm;
+  }
+
+  /* 交互微动画 */
+  .hover-lift {
+    @apply transition-all duration-200;
+  }
+  .hover-lift:hover {
+    @apply -translate-y-0.5 shadow-lg;
+  }
+}
+
+/* ─── 自定义动画 ─── */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.3);
+}
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer,
+  .animate-float,
+  .animate-fade-in-up,
+  .hover-lift:hover {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

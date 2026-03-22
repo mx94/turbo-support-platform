@@ -1,0 +1,23 @@
+{
+  "name": "@repo/auth",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./components": "./src/components.tsx"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/react": "^18.2.0",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@repo/database": "workspace:*",
+    "@supabase/supabase-js": "^2.43.4",
+    "react": "^18.2.0"
+  }
+}
