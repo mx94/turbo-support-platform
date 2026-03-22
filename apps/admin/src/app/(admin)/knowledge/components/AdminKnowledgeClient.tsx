@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Plus, Globe, Search, Eye, ThumbsUp, Pencil, Trash2, GlobeLock, Link, Loader2 } from "lucide-react";
 import { toast } from "@repo/ui/components/ui/toast";
-import { scrapeAndImportArticle, updateArticle, deleteArticle } from "../actions";
+import { scrapeAndImportArticle, updateArticle, deleteArticle, createArticle } from "../actions";
+import { ArticleEditorModal, type ArticleFormData } from "./ArticleEditorModal";
 
 interface Article {
   id: string;
@@ -32,7 +33,7 @@ export function AdminKnowledgeClient({ list, adminUserId }: Props) {
   const [isScraping, setIsScraping] = useState(false);
   const [scrapeUrl, setScrapeUrl] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [editingArticle, setEditingArticle] = useState<Article | null>(null);
+  const [editingArticle, setEditingArticle] = useState<ArticleFormData | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
@@ -88,27 +89,38 @@ export function AdminKnowledgeClient({ list, adminUserId }: Props) {
     }
   };
 
-  const handleSaveEdit = async () => {
-    if (!editingArticle) return;
-    
-    setIsSaving(true);
+  const handleSaveEdit = async (data: ArticleFormData) => {
     try {
-      const res = await updateArticle(editingArticle.id, {
-        title: editingArticle.title,
-        content: editingArticle.content,
-        category: editingArticle.category,
-        is_published: editingArticle.is_published
-      });
-      if (res.success) {
-        toast({ title: "保存成功", description: "文章更新已生效" });
-        setEditingArticle(null);
+      if (data.id) {
+        const res = await updateArticle(data.id, {
+          title: data.title,
+          content: data.content,
+          category: data.category,
+          is_published: data.is_published
+        });
+        if (res.success) {
+          toast({ title: "保存成功", description: "文章更新已生效" });
+          setEditingArticle(null);
+        } else {
+          toast({ title: "保存失败", description: res.message, variant: "error" });
+        }
       } else {
-        toast({ title: "保存失败", description: res.message, variant: "error" });
+        const res = await createArticle({
+          title: data.title,
+          content: data.content,
+          category: data.category,
+          is_published: data.is_published,
+          adminUserId
+        });
+        if (res.success) {
+          toast({ title: "创建成功", description: "新文章已存入知识库" });
+          setEditingArticle(null);
+        } else {
+          toast({ title: "创建失败", description: res.message, variant: "error" });
+        }
       }
     } catch (err) {
-      toast({ title: "保存失败", description: "网络错误", variant: "error" });
-    } finally {
-      setIsSaving(false);
+      toast({ title: "保存失败", description: "发生未知网络错误", variant: "error" });
     }
   };
 
@@ -132,7 +144,10 @@ export function AdminKnowledgeClient({ list, adminUserId }: Props) {
             <Link className="w-3.5 h-3.5" />
             外部链接入库
           </button>
-          <button className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-xs font-medium text-primary-foreground cursor-pointer hover:bg-primary/90 shadow-sm transition-all">
+          <button 
+            onClick={() => setEditingArticle({ title: "", content: "", category: "常见问题", is_published: false })}
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 text-xs font-medium text-primary-foreground cursor-pointer hover:bg-primary/90 shadow-sm transition-all"
+          >
             <Plus className="w-3.5 h-3.5" />
             新建文章
           </button>
@@ -288,104 +303,13 @@ export function AdminKnowledgeClient({ list, adminUserId }: Props) {
         </div>
       )}
 
-      {/* ── 编辑文章对话框 ── */}
-      {editingArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => !isSaving && setEditingArticle(null)} />
-          <div className="relative bg-card rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col border border-border animate-in fade-in zoom-in-95 duration-200">
-            <div className="px-6 py-5 border-b border-border/50 flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-semibold tracking-tight">编辑文章</h3>
-                <p className="text-sm text-muted-foreground mt-0.5">修改知识库文章的标题、类别与正文详细内容。</p>
-              </div>
-            </div>
-            
-            <div className="p-6 overflow-y-auto space-y-5">
-              <div className="space-y-2">
-                <label className="text-sm font-medium">标题</label>
-                <input
-                  type="text"
-                  value={editingArticle.title}
-                  onChange={(e) => setEditingArticle({...editingArticle, title: e.target.value})}
-                  className="w-full h-10 px-3 flex rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">分类</label>
-                  <input
-                    type="text"
-                    value={editingArticle.category}
-                    onChange={(e) => setEditingArticle({...editingArticle, category: e.target.value})}
-                    className="w-full h-10 px-3 flex rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">状态</label>
-                  <div className="flex h-10 items-center gap-3">
-                    <label className="flex items-center gap-2 cursor-pointer text-sm">
-                      <input 
-                        type="radio" 
-                        name="article-status" 
-                        checked={editingArticle.is_published}
-                        onChange={() => setEditingArticle({...editingArticle, is_published: true})}
-                        className="accent-primary"
-                      />
-                      <span className={editingArticle.is_published ? "text-emerald-600 font-medium" : ""}>已发布</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer text-sm">
-                      <input 
-                        type="radio" 
-                        name="article-status" 
-                        checked={!editingArticle.is_published}
-                        onChange={() => setEditingArticle({...editingArticle, is_published: false})}
-                        className="accent-primary"
-                      />
-                      <span className={!editingArticle.is_published ? "text-amber-600 font-medium" : ""}>草稿</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Markdown 正文</label>
-                <textarea
-                  value={editingArticle.content}
-                  onChange={(e) => setEditingArticle({...editingArticle, content: e.target.value})}
-                  className="w-full min-h-[300px] p-3 flex rounded-md border border-input bg-transparent text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring font-mono resize-y"
-                />
-              </div>
-            </div>
-
-            <div className="px-6 py-4 border-t border-border/50 bg-muted/20 flex justify-end gap-3 mt-auto">
-              <button
-                type="button"
-                disabled={isSaving}
-                onClick={() => setEditingArticle(null)}
-                className="h-9 px-4 rounded-md border border-input bg-background text-sm font-medium shadow-sm hover:bg-accent hover:text-accent-foreground disabled:opacity-50 transition-colors"
-              >
-                取消
-              </button>
-              <button
-                type="button"
-                disabled={isSaving}
-                onClick={handleSaveEdit}
-                className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium shadow hover:bg-primary/90 disabled:opacity-50 flex items-center gap-2 transition-colors"
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    保存中...
-                  </>
-                ) : (
-                  "保存修改"
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ── 编辑文章 / 新建文章对话框 ── */}
+      <ArticleEditorModal 
+        isOpen={!!editingArticle}
+        initialData={editingArticle}
+        onClose={() => setEditingArticle(null)}
+        onSave={handleSaveEdit}
+      />
     </>
   );
 }
