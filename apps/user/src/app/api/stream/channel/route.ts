@@ -60,6 +60,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       name: title, // 用户的工单标题
       members: memberIds,
       created_by_id: user.id,
+      ticket_id: ticket.id,
     } as Record<string, unknown>);
     
     await channel.create();

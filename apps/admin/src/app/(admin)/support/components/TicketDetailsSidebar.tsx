@@ -25,7 +25,7 @@ export function TicketDetailsSidebar() {
   const { addToast } = useToast();
 
   const channelData = channel?.data as Record<string, any> | undefined;
-  const ticketId = channelData?.ticket_id as string | undefined;
+  const ticketId = (channelData?.ticket_id as string | undefined) || channel?.id?.replace("ticket-", "");
   const customerUserId = React.useMemo(() => {
     // 1. 优先尝试从 channelData 取出我们注入的 created_by_id
     if (channelData?.created_by_id) {
