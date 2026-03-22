@@ -59,6 +59,7 @@ export interface Database {
           created_at: string
           updated_at: string
           resolved_at: string | null
+          internal_notes: string | null
         }
         Insert: {
           id?: string
@@ -75,6 +76,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
           resolved_at?: string | null
+          internal_notes?: string | null
         }
         Update: {
           id?: string
@@ -91,6 +93,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
           resolved_at?: string | null
+          internal_notes?: string | null
         }
         Relationships: [
           {
