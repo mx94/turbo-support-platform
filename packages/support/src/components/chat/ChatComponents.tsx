@@ -9,13 +9,17 @@ import {
   MessageSimple,
   MessageTimestamp,
   MessageStatus,
+  MessageInputContextValue,
+  useMessageInputContext,
+  SendButton,
+  TextareaComposer,
 } from 'stream-chat-react';
 import type { EventComponentProps } from 'stream-chat-react';
 import {
   MessageActions,
   defaultMessageActionSet,
 } from 'stream-chat-react/experimental';
-import { MessageCircle, Lock } from 'lucide-react';
+import { MessageCircle, Lock, ArrowRight } from 'lucide-react';
 
 import { Sparkles, MessageSquarePlus } from 'lucide-react';
 export { CustomChannelHeader } from './CustomChannelHeader';
@@ -86,6 +90,38 @@ export const CustomMessageActions = () => {
   return <MessageActions messageActionSet={customMessageActionSet} />;
 };
 
+export const CustomInputUI = () => {
+  const { 
+    handleSubmit,
+  } = useMessageInputContext();
+
+  return (
+    <div className="p-3 bg-white w-full">
+      <div className="flex flex-col rounded-2xl border border-border/60 bg-white/50 backdrop-blur-xl shadow-sm focus-within:ring-1 focus-within:ring-primary/40 focus-within:border-primary/40 transition-all duration-200 overflow-hidden">
+        <div className="flex flex-row items-end px-3 py-2 min-h-[52px]">
+          <div className="flex-1 w-full relative">
+            <TextareaComposer 
+              placeholder="输入你的问题" 
+              minRows={1}
+              maxRows={6}
+              className="stream-custom-textarea text-[14px] bg-transparent resize-none border-none outline-none focus:ring-0 text-foreground w-full pl-2 pt-2 min-h-[24px] max-h-[160px] scrollbar-hide"
+            />
+          </div>
+          <div className="flex-shrink-0 ml-2 mb-1">
+            <button
+              onClick={handleSubmit}
+              className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center transition-all"
+              aria-label="发送消息"
+            >
+              <ArrowRight className="w-4 h-4 text-secondary-foreground" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const ConditionalMessageInput = () => {
   const { channelCapabilities, channel } = useChannelStateContext();
 
@@ -119,5 +155,5 @@ export const ConditionalMessageInput = () => {
     );
   }
 
-  return <MessageInput />;
+  return <MessageInput Input={CustomInputUI} />;
 };

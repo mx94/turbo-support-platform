@@ -361,3 +361,8 @@
   background: hsl(var(--muted-foreground) / 0.3);
 }
 
+/* ─── 消息列表顶部系统提示区域 ─── */
+.str-chat__list-notifications {
+  margin: 0 !important;
+  border-bottom: 1px solid hsl(var(--border)) !important;
+}
